@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#030204">
+<title>CCIMUNS · Verification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#c9a24d;
+    --gold-lt:#f7e9c2;
+    --gold-deep:#8a6d2c;
+    --wine:#7d0c15;
+    --blood:#b01822;
+    --text:#d6cdba;
+    --serif:'Cinzel',Georgia,serif;
+    --body:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+    --pad:clamp(18px,5.2vw,30px);
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    margin:0;
+    min-height:100svh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:
+      max(14px, env(safe-area-inset-top))
+      max(14px, env(safe-area-inset-right))
+      max(14px, env(safe-area-inset-bottom))
+      max(14px, env(safe-area-inset-left));
+    background:#030204;
+    color:var(--text);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.65;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* ══════════ atmosphere ══════════ */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-3;
+    background:
+      radial-gradient(ellipse 110% 60% at 50% -10%, rgba(150,14,26,.5), transparent 62%),
+      radial-gradient(ellipse 90% 55% at 50% 115%, rgba(100,10,20,.38), transparent 60%),
+      radial-gradient(circle at 50% 42%, rgba(201,162,77,.08), transparent 60%),
+      linear-gradient(#0b0508 0%, #050204 55%, #020102 100%);
+  }
+
+  /* brocade */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    pointer-events:none;
+    opacity:.055;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c9a24d' stroke-width='0.75'%3E%3Cpath d='M60 10 C70 29 91 29 91 49 C91 68 72 73 60 60 C48 73 29 68 29 49 C29 29 50 29 60 10 Z'/%3E%3Cpath d='M60 60 L60 110'/%3E%3Cpath d='M48 82 C55 89 65 89 72 82'/%3E%3Ccircle cx='60' cy='49' r='2.6'/%3E%3Cpath d='M0 60 C10 79 31 79 31 99'/%3E%3Cpath d='M120 60 C110 79 89 79 89 99'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:120px 120px;
+  }
+
+  /* ══════════ card ══════════ */
+  .card{
+    position:relative;
+    width:min(560px,100%);
+    padding:clamp(34px,8vw,54px) var(--pad) clamp(28px,6vw,42px);
+    text-align:center;
+    background:
+      radial-gradient(ellipse 130% 65% at 50% 0%, rgba(125,12,21,.24), transparent 64%),
+      linear-gradient(168deg, rgba(22,15,15,.97), rgba(7,3,5,.99));
+    border:1px solid rgba(201,162,77,.32);
+    border-radius:3px;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,.85),
+      0 0 0 5px rgba(3,2,3,.95),
+      0 0 0 6px rgba(201,162,77,.13),
+      0 30px 80px -22px rgba(0,0,0,.98),
+      0 0 110px -34px rgba(150,18,30,.72),
+      0 0 80px -28px rgba(201,162,77,.28),
+      inset 0 0 120px rgba(201,162,77,.04);
+    animation:rise 1.4s cubic-bezier(.2,.75,.2,1) both;
+    isolation:isolate;
+    overflow:hidden;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(26px) scale(.982); filter:blur(9px); }
+    to  { opacity:1; transform:none; filter:blur(0); }
+  }
+
+  /* inner hairline */
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:10px;
+    border:1px solid rgba(201,162,77,.12);
+    border-radius:2px;
+    pointer-events:none;
+    z-index:1;
+  }
+
+  /* mask watermark */
+  .mask-mark{
+    position:absolute;
+    left:50%;
+    top:44%;
+    width:min(440px,128%);
+    transform:translate(-50%,-50%);
+    color:var(--gold);
+    opacity:.05;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* scan sweep */
+  .scan{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:3;
+  }
+  .scan::before{
+    content:"";
+    position:absolute;
+    left:-30%;
+    right:-30%;
+    height:150px;
+    background:linear-gradient(to bottom, transparent, rgba(201,162,77,.11), transparent);
+    filter:blur(5px);
+    animation:scan 8s cubic-bezier(.55,0,.45,1) infinite;
+  }
+  @keyframes scan{
+    0%      { top:-26%; opacity:0; }
+    12%     { opacity:1; }
+    50%     { opacity:1; }
+    66%,100%{ top:116%; opacity:0; }
+  }
+
+  /* ══════════ corner flourishes ══════════ */
+  .corner{
+    position:absolute;
+    width:clamp(28px,7vw,42px);
+    height:auto;
+    color:var(--gold);
+    opacity:.55;
+    pointer-events:none;
+    z-index:4;
+  }
+  .corner path,.corner circle{ fill:none; stroke:currentColor; stroke-width:1; }
+  .corner .faint{ opacity:.45; }
+  .corner .dot{ fill:currentColor; stroke:none; }
+  .corner.tl{ top:6px;  left:6px; }
+  .corner.tr{ top:6px;  right:6px; transform:scaleX(-1); }
+  .corner.bl{ bottom:6px; left:6px; transform:scaleY(-1); }
+  .corner.br{ bottom:6px; right:6px; transform:scale(-1,-1); }
+
+  /* ══════════ eyebrow ══════════ */
+  .eyebrow{
+    position:relative;
+    z-index:5;
+    margin:0 0 clamp(18px,4.5vw,28px);
+    font-family:var(--mono);
+    font-size:9px;
+    letter-spacing:.34em;
+    text-indent:.34em;
+    text-transform:uppercase;
+    color:rgba(201,162,77,.66);
+  }
+  .eyebrow b{
+    display:block;
+    margin-top:7px;
+    font-weight:400;
+    font-size:8px;
+    letter-spacing:.22em;
+    text-indent:.22em;
+    color:rgba(214,205,186,.3);
+  }
+
+  /* ══════════ emblem ══════════ */
+  .emblem{
+    position:relative;
+    width:min(250px,72vw);
+    aspect-ratio:1;
+    margin:0 auto clamp(18px,4vw,26px);
+    display:grid;
+    place-items:center;
+  }
+
+  .halo{
+    position:absolute;
+    inset:-16%;
+    border-radius:50%;
+    background:
+      radial-gradient(circle, rgba(201,162,77,.32), rgba(201,162,77,.08) 38%, transparent 66%),
+      radial-gradient(circle at 50% 80%, rgba(176,24,34,.2), transparent 62%);
+    filter:blur(12px);
+    animation:flicker 5.8s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes flicker{
+    0%,100%{ opacity:.58; transform:scale(1); }
+    17%    { opacity:.9;  transform:scale(1.05); }
+    32%    { opacity:.46; transform:scale(.98); }
+    48%    { opacity:.96; transform:scale(1.07); }
+    64%    { opacity:.52; transform:scale(.99); }
+    80%    { opacity:.84; transform:scale(1.035); }
+  }
+
+  /* rotating text ring */
+  .ring{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    color:var(--gold);
+    animation:spin 85s linear infinite;
+    opacity:.62;
+    pointer-events:none;
+  }
+  .ring .track{ fill:none; stroke:currentColor; stroke-width:.55; opacity:.32; }
+  .ring .track.thin{ stroke-width:.4; opacity:.16; }
+  .ring text{
+    fill:currentColor;
+    font-family:var(--serif);
+    font-size:9px;
+    letter-spacing:2.9px;
+    opacity:.92;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ── W monogram ── */
+  .monogram{
+    position:relative;
+    z-index:2;
+    width:74%;
+    height:auto;
+    overflow:visible;
+    color:var(--gold);
+  }
+  .monogram .w-body{
+    fill:none;
+    stroke:url(#goldGrad);
+    stroke-width:7.5;
+    stroke-linejoin:miter;
+    stroke-linecap:butt;
+    filter:drop-shadow(0 0 12px rgba(201,162,77,.55))
+           drop-shadow(0 0 34px rgba(176,24,34,.3));
+  }
+  .monogram .w-inner{
+    fill:none;
+    stroke:rgba(247,233,194,.5);
+    stroke-width:1.2;
+    stroke-linejoin:miter;
+  }
+  .monogram .arc{
+    fill:none;
+    stroke:url(#goldGrad);
+    stroke-width:1.6;
+    opacity:.7;
+  }
+  .monogram .tick{ stroke:rgba(201,162,77,.55); stroke-width:1; }
+  .monogram .gem{
+    fill:var(--gold-lt);
+    filter:drop-shadow(0 0 8px rgba(201,162,77,.95));
+  }
+  .monogram .gem-red{
+    fill:var(--blood);
+    filter:drop-shadow(0 0 7px rgba(176,24,34,.95));
+  }
+
+  .glint{
+    transform-box:view-box;
+    transform-origin:50% 50%;
+    animation:glint 6.5s ease-in-out infinite;
+  }
+  @keyframes glint{
+    0%,100%{ opacity:.15; }
+    50%    { opacity:.6; }
+  }
+
+  /* ══════════ titles ══════════ */
+  .org{
+    position:relative;
+    z-index:5;
+    margin:0;
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(26px,8.4vw,40px);
+    letter-spacing:.22em;
+    text-indent:.22em;
+    line-height:1.1;
+    background:linear-gradient(180deg,#fffaf0 0%,#f2dda6 42%,#b08f42 76%,#8a6d2c 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 26px rgba(201,162,77,.42));
+  }
+  .org-sub{
+    position:relative;
+    z-index:5;
+    margin:10px 0 0;
+    font-family:var(--mono);
+    font-size:clamp(8px,2.3vw,10px);
+    font-weight:400;
+    letter-spacing:.46em;
+    text-indent:.46em;
+    text-transform:uppercase;
+    color:rgba(201,162,77,.72);
+  }
+
+  /* ══════════ divider ══════════ */
+  .divider{
+    position:relative;
+    z-index:5;
+    display:block;
+    width:min(300px,84%);
+    margin:clamp(20px,4.5vw,28px) auto;
+    color:var(--gold);
+    opacity:.72;
+  }
+  .divider path,.divider circle{ fill:none; stroke:currentColor; stroke-width:1; }
+  .divider .dot{ fill:currentColor; stroke:none; }
+
+  /* ══════════ status ══════════ */
+  .status{
+    position:relative;
+    z-index:5;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin:0;
+    padding:9px 20px;
+    border:1px solid rgba(201,162,77,.34);
+    border-radius:999px;
+    background:linear-gradient(180deg, rgba(201,162,77,.1), rgba(201,162,77,.03));
+    font-family:var(--mono);
+    font-size:9.5px;
+    letter-spacing:.26em;
+    text-indent:.26em;
+    text-transform:uppercase;
+    color:var(--gold-lt);
+    box-shadow:
+      0 0 30px -12px rgba(201,162,77,.9),
+      0 0 55px -22px rgba(176,24,34,.75),
+      inset 0 0 20px rgba(201,162,77,.07);
+  }
+  .pulse{
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--gold-lt);
+    box-shadow:0 0 9px var(--gold), 0 0 18px rgba(201,162,77,.75);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%    { opacity:.22; transform:scale(.6); }
+  }
+
+  /* ══════════ copy ══════════ */
+  .lede{
+    position:relative;
+    z-index:5;
+    margin:clamp(22px,5vw,32px) 0 0;
+    font-size:18px;
+    font-style:italic;
+    font-weight:300;
+    color:rgba(214,205,186,.66);
+  }
+  .role{
+    position:relative;
+    z-index:5;
+    margin:16px 0 0;
+    font-family:var(--serif);
+    font-size:clamp(10px,2.6vw,12px);
+    letter-spacing:.32em;
+    text-indent:.32em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  .name{
+    position:relative;
+    z-index:5;
+    margin:.24em 0 .06em;
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(30px,10.4vw,46px);
+    line-height:1.12;
+    letter-spacing:.03em;
+    background:linear-gradient(180deg,#fffaf0 0%,#f2dda6 40%,#b08f42 78%,#8a6d2c 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 30px rgba(201,162,77,.42));
+  }
+  .seat{
+    position:relative;
+    z-index:5;
+    margin:0 0 clamp(18px,4vw,24px);
+    font-size:16px;
+    font-style:italic;
+    letter-spacing:.16em;
+    color:rgba(214,205,186,.52);
+  }
+  .note{
+    position:relative;
+    z-index:5;
+    margin:0 auto;
+    max-width:38ch;
+    font-size:17px;
+    font-weight:300;
+    color:rgba(214,205,186,.76);
+  }
+
+  /* ══════════ ledger ══════════ */
+  .details{
+    position:relative;
+    z-index:5;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    margin:clamp(26px,5.5vw,38px) 0 0;
+    padding:18px 0;
+    border-top:1px solid rgba(201,162,77,.18);
+    border-bottom:1px solid rgba(201,162,77,.18);
+  }
+  .details > div{ padding:0 4px; }
+  .details > div + div{ border-left:1px solid rgba(201,162,77,.15); }
+  .details dt{
+    margin:0 0 7px;
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.2em;
+    text-indent:.2em;
+    text-transform:uppercase;
+    color:rgba(214,205,186,.36);
+  }
+  .details dd{
+    margin:0;
+    font-family:var(--serif);
+    font-size:13px;
+    letter-spacing:.1em;
+    color:var(--gold-lt);
+  }
+
+  /* ══════════ wax seal ══════════ */
+  .seal{
+    position:relative;
+    z-index:5;
+    width:clamp(92px,24vw,112px);
+    aspect-ratio:1;
+    margin:clamp(26px,5vw,36px) auto 0;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:radial-gradient(circle at 34% 28%, #bd1d27 0%, #8a1018 38%, #5a0710 68%, #310308 100%);
+    border:1px solid rgba(201,162,77,.48);
+    box-shadow:
+      inset 0 0 24px rgba(0,0,0,.82),
+      inset 0 2px 10px rgba(255,140,120,.18),
+      0 0 42px -14px rgba(176,24,34,.95),
+      0 0 0 5px rgba(3,2,3,.9),
+      0 0 0 6px rgba(201,162,77,.15);
+    transform:rotate(-10deg);
+    animation:sealIn 1.7s cubic-bezier(.2,.75,.2,1) .45s both;
+  }
+  @keyframes sealIn{
+    from{ opacity:0; transform:rotate(-10deg) scale(.84); }
+    to  { opacity:1; transform:rotate(-10deg) scale(1); }
+  }
+  .seal::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    border:1px dashed rgba(201,162,77,.45);
+  }
+  .seal::after{
+    content:"";
+    position:absolute;
+    inset:14px;
+    border-radius:50%;
+    border:1px solid rgba(201,162,77,.2);
+  }
+  .seal span{
+    position:relative;
+    z-index:1;
+    font-family:var(--serif);
+    font-size:clamp(7.5px,1.9vw,9px);
+    line-height:1.9;
+    letter-spacing:.18em;
+    text-indent:.18em;
+    text-transform:uppercase;
+    color:#f0dcae;
+    text-shadow:0 1px 2px rgba(0,0,0,.85);
+  }
+
+  /* ══════════ signature ══════════ */
+  .sig{
+    position:relative;
+    z-index:5;
+    margin:clamp(22px,4.5vw,30px) 0 0;
+    font-family:var(--serif);
+    font-size:10.5px;
+    letter-spacing:.18em;
+    text-indent:.18em;
+    text-transform:uppercase;
+    color:rgba(214,205,186,.44);
+  }
+  .sig em{
+    display:block;
+    margin-top:10px;
+    font-family:var(--mono);
+    font-style:normal;
+    font-size:8px;
+    letter-spacing:.14em;
+    text-indent:.14em;
+    text-transform:uppercase;
+    color:rgba(201,162,77,.48);
+  }
+
+  /* ══════════ small screens ══════════ */
+  @media (max-width:400px){
+    body{ font-size:16px; }
+    .card{ padding-left:16px; padding-right:16px; }
+    .emblem{ width:min(214px,66vw); }
+    .details dd{ font-size:11.5px; letter-spacing:.06em; }
+    .details dt{ font-size:7.5px; letter-spacing:.14em; text-indent:.14em; }
+    .eyebrow{ font-size:8px; letter-spacing:.24em; text-indent:.24em; }
+    .org-sub{ letter-spacing:.3em; text-indent:.3em; }
+    .org{ letter-spacing:.14em; text-indent:.14em; }
+    .sig em{ letter-spacing:.09em; text-indent:.09em; }
+  }
+
+  @media (max-width:340px){
+    .emblem{ width:60vw; }
+    .seal{ width:84px; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<main class="card">
+
+  <svg class="corner tl" viewBox="0 0 70 70" aria-hidden="true">
+    <path d="M68 4 C34 4 4 34 4 68"/>
+    <path class="faint" d="M52 4 C26 10 10 26 4 52"/>
+    <circle class="dot" cx="5" cy="5" r="2.2"/>
+  </svg>
+  <svg class="corner tr" viewBox="0 0 70 70" aria-hidden="true">
+    <path d="M68 4 C34 4 4 34 4 68"/>
+    <path class="faint" d="M52 4 C26 10 10 26 4 52"/>
+    <circle class="dot" cx="5" cy="5" r="2.2"/>
+  </svg>
+  <svg class="corner bl" viewBox="0 0 70 70" aria-hidden="true">
+    <path d="M68 4 C34 4 4 34 4 68"/>
+    <path class="faint" d="M52 4 C26 10 10 26 4 52"/>
+    <circle class="dot" cx="5" cy="5" r="2.2"/>
+  </svg>
+  <svg class="corner br" viewBox="0 0 70 70" aria-hidden="true">
+    <path d="M68 4 C34 4 4 34 4 68"/>
+    <path class="faint" d="M52 4 C26 10 10 26 4 52"/>
+    <circle class="dot" cx="5" cy="5" r="2.2"/>
+  </svg>
+
+  <svg class="mask-mark" viewBox="0 0 220 130" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="1.4">
+      <path d="M110 34 C138 10 190 14 202 48 C210 72 182 104 138 108 C118 110 112 100 110 88 C108 100 102 110 82 108 C38 104 10 72 18 48 C30 14 82 10 110 34 Z"/>
+      <ellipse cx="63" cy="58" rx="24" ry="11" transform="rotate(-10 63 58)"/>
+      <ellipse cx="157" cy="58" rx="24" ry="11" transform="rotate(10 157 58)"/>
+      <path d="M110 34 L110 88"/>
+      <path d="M96 20 C104 14 116 14 124 20"/>
+    </g>
+  </svg>
+
+  <div class="scan" aria-hidden="true"></div>
+
+  <p class="eyebrow">
+    Official Credential Verification
+    <b>CCIMUNS · Türkiye</b>
+  </p>
+
+  <!-- ══ emblem ══ -->
+  <div class="emblem">
+    <div class="halo" aria-hidden="true"></div>
+
+    <svg class="ring" viewBox="0 0 300 300" aria-hidden="true">
+      <defs>
+        <path id="ringPath" d="M 150,150 m -118,0 a 118,118 0 1,1 236,0 a 118,118 0 1,1 -236,0"/>
+      </defs>
+      <circle class="track" cx="150" cy="150" r="118"/>
+      <circle class="track thin" cx="150" cy="150" r="108"/>
+      <text>
+        <textPath href="#ringPath" startOffset="0">✦ CCIMUNS ✦ CEPHOK CONSORTIUM ✦ OFFICERS AND HEADS ✦</textPath>
+      </text>
+    </svg>
+
+    <!-- W MONOGRAM -->
+    <svg class="monogram" viewBox="0 0 200 200" role="img" aria-label="CCIMUNS monogram">
+      <defs>
+        <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#fff6dd"/>
+          <stop offset="42%"  stop-color="#e8cd8c"/>
+          <stop offset="72%"  stop-color="#b08f42"/>
+          <stop offset="100%" stop-color="#7d6326"/>
+        </linearGradient>
+      </defs>
+
+      <!-- double arc above -->
+      <path class="arc" d="M58 60 C70 40 130 40 142 60"/>
+      <path class="arc" d="M64 66 C76 50 124 50 136 66" opacity=".45"/>
+
+      <!-- the W -->
+      <path class="w-body" d="M40 78 L64 152 L100 104 L136 152 L160 78"/>
+      <path class="w-inner" d="M46 82 L67 145 L100 102 L133 145 L154 82"/>
+
+      <!-- serif ticks -->
+      <path class="tick" d="M33 74 L47 74"/>
+      <path class="tick" d="M153 74 L167 74"/>
+      <path class="tick" d="M33 74 L40 78"/>
+      <path class="tick" d="M167 74 L160 78"/>
+
+      <!-- centre gem -->
+      <path class="gem" d="M100 94 L106 102 L100 110 L94 102 Z"/>
+
+      <!-- base bar + red gem -->
+      <path class="tick" d="M52 164 H148" opacity=".5"/>
+      <path class="gem-red glint" d="M100 156 L105 163 L100 170 L95 163 Z"/>
+    </svg>
+  </div>
+
+  <h1 class="org">CCIMUNS</h1>
+  <p class="org-sub">Türkiye</p>
+
+  <svg class="divider" viewBox="0 0 400 40" aria-hidden="true">
+    <path d="M8 20 H140"/>
+    <path d="M260 20 H392"/>
+    <path d="M140 20 C152 20 156 9 168 9 C180 9 184 20 196 20"/>
+    <path d="M260 20 C248 20 244 31 232 31 C220 31 216 20 204 20"/>
+    <circle cx="200" cy="20" r="3.2" class="dot"/>
+    <circle cx="200" cy="20" r="8"/>
+    <circle cx="200" cy="20" r="13" opacity=".35"/>
+  </svg>
+
+  <p class="status" role="status" aria-live="polite">
+    <span class="pulse" aria-hidden="true"></span>
+    <span id="statusText">AUTHENTICATED</span>
+  </p>
+
+  <p class="lede">This certifies that our verified</p>
+  <p class="role">Officer of Europe</p>
+
+  <h2 class="name">Oğuz Açıkel</h2>
+  <p class="seat">of Ankara</p>
+
+  <p class="note">
+    This ID badge belongs to him. Thank you for scanning the site barcode.
+  </p>
+
+  <dl class="details">
+    <div><dt>Region</dt><dd>Europe</dd></div>
+    <div><dt>Seat</dt><dd>Ankara</dd></div>
+    <div><dt>Status</dt><dd>Verified</dd></div>
+  </dl>
+
+  <div class="seal" aria-hidden="true">
+    <span>Verified<br>CCIMUNS<br>Türkiye</span>
+  </div>
+
+  <p class="sig">
+    CCIMUNS Association for Officers and Heads
+    <em>Cephok Consortium International Model United Nations Society</em>
+  </p>
+
+</main>
+
+<script>
+  (function () {
+    var el = document.getElementById('statusText');
+    if (!el) return;
+
+    var reduce = window.matchMedia &&
+                 window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+
+    el.textContent = 'SCANNING';
+    setTimeout(function () { el.textContent = 'AUTHENTICATED'; }, 1600);
+  })();
+</script>
+
+</body>
+</html>
